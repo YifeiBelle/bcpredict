@@ -26,17 +26,10 @@
 #' }
 #' @export
 predict_diagnosis <- function(newdata) {
-  # Load internal model and preprocessing objects
-  # They are stored in sysdata.rda and are automatically available
-  # but we need to ensure they are loaded
-  if (!exists("best_model", envir = environment(), inherits = FALSE)) {
-    # This should not happen if the package is built correctly
-    stop("Internal model not found. Please ensure the package is properly installed.")
-  }
-  if (!exists("preProc", envir = environment(), inherits = FALSE)) {
-    stop("Internal preprocessing object not found.")
-  }
-
+  # Internal model and preprocessing objects are loaded via sysdata.rda
+  # They are available in the package namespace.
+  # If they are missing, the package installation is broken.
+  
   # Ensure newdata is a data.frame
   if (!is.data.frame(newdata)) {
     newdata <- as.data.frame(newdata)
