@@ -42,6 +42,11 @@ BreastCancer_Project/
    - pROC
    - fastshap (optional for SHAP analysis)
 
+   If these packages are not installed, you can install them with:
+   ```r
+   install.packages(c("caret", "dplyr", "pROC", "fastshap"))
+   ```
+
 2. Run the analysis script:
    ```r
    source("scripts/main.R")
