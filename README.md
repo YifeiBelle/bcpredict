@@ -1,10 +1,15 @@
 # bcpredict
 
+<!-- badges: start -->
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![R-CMD-check](https://github.com/YifeiBelle/bcpredict/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/YifeiBelle/bcpredict/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
 An R package for predicting breast cancer diagnosis (benign vs malignant) based on 30 numeric features using a trained glmnet model.
 
 ## Installation
 
-You can install the package from GitHub using the `remotes` package:
+You can install the development version from [GitHub](https://github.com/YifeiBelle/bcpredict) with:
 
 ```r
 # Install remotes if not already installed
@@ -35,12 +40,12 @@ The model is a glmnet (elastic net) classifier trained on the Wisconsin Breast C
 
 ### Performance Metrics (on test set)
 
-- Accuracy: 0.9825
-- Sensitivity (Recall): 0.9767
-- Specificity: 0.9867
-- Precision: 0.9767
-- F1-score: 0.9767
-- AUC: 0.998
+- **Accuracy**: 0.9825
+- **Sensitivity (Recall)**: 0.9767
+- **Specificity**: 0.9867
+- **Precision**: 0.9767
+- **F1‑score**: 0.9767
+- **AUC**: 0.998
 
 These metrics are based on the best model selected among glmnet, random forest, and SVM with radial kernel.
 
@@ -48,16 +53,20 @@ These metrics are based on the best model selected among glmnet, random forest, 
 
 The top 10 most important features (by absolute coefficient) are:
 
-1. concave.points_worst
-2. perimeter_worst
-3. radius_worst
-4. concavity_worst
-5. area_worst
-6. concave.points_mean
-7. concavity_mean
-8. perimeter_mean
-9. radius_mean
-10. area_mean
+1. `concave.points_worst`
+2. `perimeter_worst`
+3. `radius_worst`
+4. `concavity_worst`
+5. `area_worst`
+6. `concave.points_mean`
+7. `concavity_mean`
+8. `perimeter_mean`
+9. `radius_mean`
+10. `area_mean`
+
+A visual summary of feature importance (from the original project) is shown below:
+
+![Feature Importance](https://raw.githubusercontent.com/YifeiBelle/bcpredict/master/figures/glmnet_feature_importance.png)
 
 ## Example with Visualization
 
@@ -71,7 +80,7 @@ results <- data.frame(
   prediction = predictions
 )
 
-# Plot (just a simple bar chart)
+# Plot
 ggplot(results, aes(x = sample, fill = prediction)) +
   geom_bar() +
   labs(title = "Predicted Diagnoses for Toy Data",
@@ -80,10 +89,22 @@ ggplot(results, aes(x = sample, fill = prediction)) +
   theme_minimal()
 ```
 
+## Model Performance Plots
+
+The original project produced additional diagnostic plots:
+
+- **ROC curves** for the three candidate models:
+
+![ROC Curves](https://raw.githubusercontent.com/YifeiBelle/bcpredict/master/figures/roc_curves.png)
+
+- **SHAP summary** (if applicable):
+
+![SHAP Summary](https://raw.githubusercontent.com/YifeiBelle/bcpredict/master/figures/shap_summary.png)
+
 ## License
 
-MIT License. See the `LICENSE` file for details.
+MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
-Contributions are welcome. Please open an issue or pull request on GitHub.
+Contributions are welcome. Please open an issue or pull request on [GitHub](https://github.com/YifeiBelle/bcpredict).
