@@ -7,8 +7,30 @@ Follow these steps to publish the bcpredict package to GitHub.
 - Git installed and configured with your username and email.
 - A GitHub account (username: YifeiBelle).
 - GitHub personal access token (PAT) with repo scope.
+- **GitHub CLI (optional but recommended)** – If you have installed GitHub CLI (`gh`), you can use it to create the repository and push with a single command. To check if you have it, open a terminal and run `gh --version`. If not installed, download from [https://cli.github.com/](https://cli.github.com/).
 
-## Steps
+## Using GitHub CLI (Simpler)
+
+If you have GitHub CLI installed and authenticated, you can create the repository and push with one command:
+
+1. **Authenticate GitHub CLI** (if not already done):
+   ```bash
+   gh auth login
+   ```
+   Follow the prompts (choose HTTPS or SSH, and log in with your browser).
+
+2. **Create repository and push** from inside the `bcpredict` directory:
+   ```bash
+   cd bcpredict
+   gh repo create YifeiBelle/bcpredict --public --push --source=.
+   ```
+   This will create a new public repository on GitHub, add the remote, and push the current branch.
+
+3. **Verify** by visiting https://github.com/YifeiBelle/bcpredict.
+
+## Manual Git Steps
+
+If you prefer not to use GitHub CLI, follow these steps:
 
 1. **Create a new repository on GitHub**
    - Go to https://github.com/new
