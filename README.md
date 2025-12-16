@@ -2,7 +2,6 @@
 
 <!-- badges: start -->
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![R-CMD-check](https://github.com/YifeiBelle/bcpredict/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/YifeiBelle/bcpredict/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 An R package for predicting breast cancer diagnosis (benign vs malignant) based on 30 numeric features using a trained glmnet model.
