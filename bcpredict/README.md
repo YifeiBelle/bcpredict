@@ -13,7 +13,7 @@ You can install the development version from [GitHub](https://github.com/YifeiBe
 ```r
 # Install remotes if not already installed
 # install.packages("remotes")
-remotes::install_github("YifeiBelle/bcpredict")
+remotes::install_github("YifeiBelle/bcpredict", subdir = "bcpredict")
 ```
 
 ## Usage
