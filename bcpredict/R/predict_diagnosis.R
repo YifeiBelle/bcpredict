@@ -59,8 +59,8 @@ predict_diagnosis <- function(newdata) {
   newdata <- newdata[, required_features, drop = FALSE]
 
   # Apply preprocessing (centering and scaling)
-  # Use caret's predict method for preProcess objects
-  newdata_scaled <- caret::predict.preProcess(preProc, newdata)
+  # Use predict method for preProcess objects (S3 method from caret)
+  newdata_scaled <- predict(preProc, newdata)
 
   # Predict probabilities using the caret model
   # The model returns probabilities for class "M" (second column)
