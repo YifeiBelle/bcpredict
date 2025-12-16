@@ -23,6 +23,7 @@ Thumbs.db
 *.swo
 
 # Package build artifacts
+*.tar.gz
 bcpredict/*.tar.gz
 bcpredict/*.zip
 bcpredict/src/*.o
