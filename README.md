@@ -53,12 +53,17 @@ BreastCancer_Project/
 
 ### Installation
 
-Install the package directly from GitHub:
+Install the package directly from GitHub using the `subdir` argument (the package is located in the `bcpredict/` subdirectory):
 
 ```r
 # Install remotes if not already installed
 # install.packages("remotes")
-remotes::install_github("YifeiBelle/bcpredict")
+remotes::install_github("YifeiBelle/bcpredict", subdir = "bcpredict")
+```
+
+Alternatively, you can install the package from the local source:
+```r
+install.packages("bcpredict", repos = NULL, type = "source")
 ```
 
 ### Usage
