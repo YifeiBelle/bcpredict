@@ -84,6 +84,15 @@ data(toy_data_features)
 # Predict diagnosis
 predictions <- predict_diagnosis(toy_data_features)
 print(predictions)
+
+# Visualize the toy data (correlation heatmap)
+visualize_toy_data(type = "correlation")
+
+# PCA scatter plot
+visualize_toy_data(type = "pca")
+
+# Histogram of all features (may be slow, run optionally) 
+visualize_toy_data(type = "histogram")
 ```
 
 The function returns a factor vector with levels "B" (benign) and "M" (malignant).
