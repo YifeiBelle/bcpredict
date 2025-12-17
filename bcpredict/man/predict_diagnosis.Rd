@@ -53,6 +53,7 @@ will fail with an error about missing objects.
 \examples{
 # Load the included toy dataset (a subset of the original data)
 data(toy_data_features)
+
 # Predict diagnosis
 predictions <- predict_diagnosis(toy_data_features)
 # View first few predictions
@@ -60,6 +61,16 @@ head(predictions)
 # Count of benign vs malignant
 table(predictions)
 
+# Visualize the toy data (correlation heatmap)
+visualize_toy_data(type = "correlation")
+
+# PCA scatter plot
+visualize_toy_data(type = "pca")
+
+# Histogram of all features (may be slow, run optionally)
+\dontrun{
+visualize_toy_data(type = "histogram")
+}
 }
 \references{
 Wisconsin Breast Cancer Diagnostic Data Set. Original donors: Dr. William H. Wolberg,
