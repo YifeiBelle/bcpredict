@@ -2,8 +2,8 @@
 #'
 #' @description
 #' Generates exploratory plots for the toy dataset (or any data frame with the same 30 features).
-#' Three plot types are supported: histogram (distribution of each feature),
-#' correlation heatmap, and PCA scatter plot.
+#' Four plot types are supported: histogram (distribution of each feature),
+#' correlation heatmap, PCA scatter plot, and feature importance (coefficients of the trained glmnet model).
 #'
 #' @param data A data.frame containing the 30 feature columns. If NULL (default),
 #'   the built-in \code{toy_data_features} dataset is used.
@@ -12,11 +12,12 @@
 #'     \item "histogram": Histograms of each feature (30 subplots).
 #'     \item "correlation": Heatmap of pairwise Pearson correlations.
 #'     \item "pca": Scatter plot of the first two principal components.
+#'     \item "importance": Bar plot of the absolute coefficients of the trained glmnet model (the best model from the original analysis).
 #'   }
 #' @param ... Additional graphical parameters passed to the underlying plot functions.
 #'
 #' @return Invisibly returns the plotted object (a list for PCA, a matrix for correlation,
-#'   or NULL for histogram). The primary purpose is side‑effect plotting.
+#'   a numeric vector for importance, or NULL for histogram). The primary purpose is side‑effect plotting.
 #'
 #' @details
 #' For "histogram", the function sets up a 6×5 layout and draws a histogram for each
@@ -29,6 +30,10 @@
 #' For "pca", principal component analysis is performed via \code{prcomp()} (centered
 #' but not scaled, because the features are already on similar scales). The first two
 #' PCs are plotted as a scatter plot. Points are colored by their row index.
+#'
+#' For "importance", the function extracts the coefficients of the trained glmnet model
+#' (stored internally in the package) and plots their absolute values as a horizontal bar plot.
+#' This visualization matches the feature importance plot shown in the original analysis.
 #'
 #' @note
 #' The function is intended for quick exploratory visualization of the toy dataset.
@@ -46,9 +51,11 @@
 #' visualize_toy_data(type = "correlation")
 #' # PCA scatter plot
 #' visualize_toy_data(type = "pca")
+#' # Feature importance (coefficients of the trained glmnet model)
+#' visualize_toy_data(type = "importance")
 #'
 #' @export
-visualize_toy_data <- function(data = NULL, type = c("histogram", "correlation", "pca"), ...) {
+visualize_toy_data <- function(data = NULL, type = c("histogram", "correlation", "pca", "importance"), ...) {
   type <- match.arg(type)
 
   # If no data provided, use the built‑in toy dataset
@@ -97,7 +104,8 @@ visualize_toy_data <- function(data = NULL, type = c("histogram", "correlation",
   switch(type,
     histogram = .visualize_histogram(data, ...),
     correlation = .visualize_correlation(data, ...),
-    pca = .visualize_pca(data, ...)
+    pca = .visualize_pca(data, ...),
+    importance = .visualize_importance(data, ...)
   )
 }
 
@@ -165,4 +173,51 @@ visualize_toy_data <- function(data = NULL, type = c("histogram", "correlation",
   grid()
 
   invisible(pca)
+}
+
+# Internal helper: feature importance (coefficients of the trained glmnet model)
+.visualize_importance <- function(data, ...) {
+  # The internal model objects are stored in the package namespace
+  # They are loaded via sysdata.rda and are available as 'best_model' and 'preProc'
+  # We need to ensure they are accessible.
+  if (!exists("best_model", envir = parent.env(environment()))) {
+    # Try to load from the package's internal data
+    # This is a fallback; normally they are already present when the package is loaded.
+    ns <- asNamespace("bcpredict")
+    if (exists("best_model", envir = ns)) {
+      best_model <- get("best_model", envir = ns)
+    } else {
+      stop("Internal model object 'best_model' not found. The package may be corrupted.")
+    }
+  } else {
+    best_model <- get("best_model", envir = parent.env(environment()))
+  }
+
+  # Extract coefficients from the glmnet model (caret wrapper)
+  # The finalModel is a glmnet object
+  coef_matrix <- coef(best_model$finalModel, s = best_model$finalModel$lambdaOpt)
+  feature_coef <- as.vector(coef_matrix)[-1]  # remove intercept
+  names(feature_coef) <- rownames(coef_matrix)[-1]
+
+  # Absolute values for importance
+  importance <- abs(feature_coef)
+  importance <- sort(importance, decreasing = TRUE)
+
+  # Keep only the top 15 features for readability
+  top_n <- min(15, length(importance))
+  top_importance <- head(importance, top_n)
+
+  # Horizontal bar plot
+  oldpar <- par(mar = c(5, 10, 4, 2))
+  on.exit(par(oldpar))
+  barplot(rev(top_importance),
+          horiz = TRUE,
+          las = 1,
+          main = "Feature Importance (glmnet - Best Model)",
+          xlab = "Absolute Coefficient Value",
+          col = "coral",
+          ...)
+  box()
+
+  invisible(importance)
 }
