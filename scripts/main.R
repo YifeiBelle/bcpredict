@@ -59,8 +59,8 @@ calculate_metrics <- function(true_vals, predicted_vals) {
 data <- read.csv("data/data.csv", stringsAsFactors = FALSE)
 
 # 数据预处理
-data$X <- NULL  # 删除多余的列
-data$id <- NULL  # 删除ID列
+if ("X" %in% names(data)) data$X <- NULL  # 安全删除
+if ("id" %in% names(data)) data$id <- NULL  # 安全删除
 data$diagnosis <- as.factor(data$diagnosis)  # 转换目标变量为因子
 
 # 查看数据基本信息
@@ -79,12 +79,8 @@ test_data <- data[-train_index, ]
 
 cat("\n数据划分完成: 训练集", nrow(train_data), "样本, 测试集", nrow(test_data), "样本\n")
 
-# 对特征进行标准化处理
-cat("对特征进行标准化处理...\n")
-preProc <- preProcess(train_data[, -1], method = c("center", "scale"))
-train_data[, -1] <- predict(preProc, train_data[, -1])
-test_data[, -1] <- predict(preProc, test_data[, -1])
-cat("标准化完成\n\n")
+# 将预处理步骤(center, scale)放入train函数中，这样模型对象会包含预处理信息，不需要手动进行标准化，模型会自动处理
+cat("预处理配置: 将在模型训练过程中自动进行标准化(center, scale)...\n\n")
 
 # 训练多个模型进行对比
 model_methods <- c("glmnet", "rf", "svmRadial")
@@ -106,13 +102,14 @@ for (method in model_methods) {
   }
   
   # 训练模型(重复交叉验证 + 超参数调优)
-  model <- train(diagnosis ~ ., 
-                 data = train_data, 
+  model <- train(diagnosis ~ .,
+                 data = train_data,
                  method = method,
+                 preProcess = c("center", "scale"), # 关键修改：将预处理集成到模型中
                  tuneGrid = tune_grid,
                  trControl = trainControl(
-                   method = "repeatedcv", 
-                   number = 10, 
+                   method = "repeatedcv",
+                   number = 10,
                    repeats = 3,
                    classProbs = TRUE,
                    summaryFunction = twoClassSummary
@@ -126,10 +123,10 @@ for (method in model_methods) {
   pred_prob <- predict(model, newdata = test_data, type = "prob")[, 2]
   
   # 使用0.4作为阈值进行分类
-  predictions <- ifelse(pred_prob >= 0.4, levels(test_data$diagnosis)[2], levels(test_data$diagnosis)[1])
+  predictions <- ifelse(pred_prob >= 0.4, "M", "B")
   predictions <- factor(predictions, levels = levels(test_data$diagnosis))
   
-  cm <- confusionMatrix(predictions, test_data$diagnosis)
+  cm <- confusionMatrix(predictions, test_data$diagnosis, positive = "M")
   
   # 计算ROC曲线的AUC值
   roc_obj <- roc(test_data$diagnosis, pred_prob, quiet = TRUE)
@@ -198,13 +195,13 @@ cat("ROC曲线已保存至: figures/roc_curves.png\n")
 # 显示最佳模型的结果
 cat("\n========== 最佳模型详细评估 ==========\n")
 best_predictions <- predict(models[[best_model_name]], newdata = test_data, type = "prob")[, 2]
-best_predictions <- ifelse(best_predictions >= 0.4, levels(test_data$diagnosis)[2], levels(test_data$diagnosis)[1])
+best_predictions <- ifelse(best_predictions >= 0.4, "M", "B")
 best_predictions <- factor(best_predictions, levels = levels(test_data$diagnosis))
 cat("基于混淆矩阵的指标计算:\n")
 metrics <- calculate_metrics(test_data$diagnosis, best_predictions)
 
 cat("\ncaret包的详细混淆矩阵:\n")
-best_cm <- confusionMatrix(best_predictions, test_data$diagnosis)
+best_cm <- confusionMatrix(best_predictions, test_data$diagnosis, positive = "M")
 print(best_cm)
 
 # 显示所有模型的特征重要性
