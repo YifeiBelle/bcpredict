@@ -54,6 +54,8 @@ BreastCancer_Project/
 
 3. Results will be saved in the `figures/` and `models/` directories (created automatically).
 
+**Note:** The package `bcpredict` already includes the trained model and performance figures, so running the script is only necessary if you wish to reproduce the analysis or retrain with new data.
+
 ## Using the R Package `bcpredict`
 
 ### Installation
@@ -123,11 +125,11 @@ A visual summary of feature importance (from the original project) is shown belo
 ## Key Results
 
 - **Best Model**: glmnet (Logistic Regression with Elastic Net)
-  - Accuracy: 98.82%
-  - Sensitivity: 98.41%
-  - Specificity: 99.07%
-  - F1‑score: 98.41%
-  - AUC: 0.991
+  - Accuracy: 98.25%
+  - Sensitivity: 97.67%
+  - Specificity: 98.67%
+  - F1‑score: 97.67%
+  - AUC: 0.998
 
 - **Other Models**:
   - Random Forest: 95.29% accuracy, AUC 0.991
