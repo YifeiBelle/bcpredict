@@ -69,6 +69,6 @@ The analysis that produced this model is documented in the project repository:
 \url{https://github.com/YifeiBelle/bcpredict}.
 }
 \seealso{
-\code{\link[caret]{train}} for model training, \code{\link[glmnet]{glmnet}} for
+\code{caret::train} for model training, \code{glmnet::glmnet} for
 the underlying algorithm.
 }

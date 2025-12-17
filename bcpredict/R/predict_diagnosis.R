@@ -53,7 +53,7 @@
 #' table(predictions)
 #'
 #' @seealso
-#' \code{\link[caret]{train}} for model training, \code{\link[glmnet]{glmnet}} for
+#' \code{caret::train} for model training, \code{glmnet::glmnet} for
 #' the underlying algorithm.
 #'
 #' @references
