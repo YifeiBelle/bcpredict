@@ -103,12 +103,11 @@ The model is a glmnet (elastic net) classifier trained on the Wisconsin Breast C
 
 #### Performance Metrics (on test set)
 
-- **Accuracy**: 0.9825
-- **Sensitivity (Recall)**: 0.9767
-- **Specificity**: 0.9867
-- **Precision**: 0.9767
-- **F1‑score**: 0.9767
-- **AUC**: 0.998
+- **Accuracy**: 0.9882
+- **Sensitivity (Recall)**: 0.9841
+- **Specificity**: 0.9907
+- **F1‑score**: 0.9841
+- **AUC**: 0.9912
 
 These metrics are based on the best model selected among glmnet, random forest, and SVM with radial kernel.
 
