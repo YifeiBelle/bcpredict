@@ -181,15 +181,15 @@ A visual summary of feature importance (from the original project) is shown belo
 - Random Forest: SHAP value analysis
 - non‑linear feature interactions
 
-###Key Findings
-The most important diagnostic features (sorted by importance):
-  1. radius_worst          (maximum radius)
-  2. concave.points_worst  (maximum number of concave points)
-  3. texture_worst         (maximum texture)
-  4. radius_se             (radius standard error)
-  5. area_worst            (maximum area)
+### Key Findings
+- The most important diagnostic features (sorted by importance):
+- 1. radius_worst          (maximum radius)
+- 2. concave.points_worst  (maximum number of concave points)
+- 3. texture_worst         (maximum texture)
+- 4. radius_se             (radius standard error)
+- 5. area_worst            (maximum area)
 
-→ All "_worst" features (maximum values) are the most critical for the diagnosis of malignant tumors
+- → All "_worst" features (maximum values) are the most critical for the diagnosis of malignant tumors
 
 ## Model Performance Plots
 
