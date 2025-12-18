@@ -31,7 +31,6 @@ BreastCancer_Project/
 │   └── main.R                    # Complete analysis script
 ├── .gitignore
 ├── BreastCancer_Project.Rproj    # RStudio project file
-├── INSTALL_INSTRUCTIONS.md       # Additional installation instructions
 ├── LICENSE                       # MIT License
 ├── README.md                     # This file
 ├── validate_model.R              # Verifying the Model
