@@ -63,17 +63,8 @@ If you wish to verify that the packaged model reproduces the reported performanc
 
 1. Ensure you have installed the `bcpredict` package (see [Installation](#installation)).
 2. Download or clone the project repository.
-3. Run the validation script from the project root directory:
-
-   ```r
-   source("validate_model.R")
-   ```
-
-   Alternatively, run it directly with Rscript:
-
-   ```bash
-   Rscript validate_model.R
-   ```
+3. Run the validation script from the project root directory
+   
 ### Expected Output
 
 The validation script prints a detailed confusion matrix and metrics. The expected values are:
@@ -158,17 +149,17 @@ A visual summary of feature importance (from the original project) is shown belo
 ## Key Results
 
 - **Best Model**: glmnet (Logistic Regression with Elastic Net)
-  - Accuracy: 98.25%
-  - Sensitivity: 97.67%
-  - Specificity: 98.67%
-  - F1‑score: 97.67%
-  - AUC: 0.998
+  - Accuracy: 98.82%
+  - Sensitivity: 98.41%
+  - Specificity: 99.07%
+  - F1‑score: 98.41%
+  - AUC: 0.9912
 
 - **Other Models**:
-  - Random Forest: 95.29% accuracy, AUC 0.991
-  - SVM (RBF kernel): 95.29% accuracy, AUC 0.989
+  - Random Forest: 95.29% accuracy, AUC 0.9907
+  - SVM (RBF kernel): 95.29% accuracy, AUC 0.9890
 
-- **Data Split**: 70% training (398 samples) / 30% testing (170 samples)
+- **Data Split**: 70% training (399 samples) / 30% testing (170 samples)
 - **Cross‑validation**: 10‑fold repeated cross‑validation (3 repeats)
 - **Custom threshold**: 0.4 (optimized for class imbalance)
 
@@ -183,10 +174,22 @@ A visual summary of feature importance (from the original project) is shown belo
 - Hyperparameter grid search
 - Repeated cross‑validation optimization
 - ROC curve as the optimization metric
+- Classification threshold is set to 0.4
 
 ### Feature Interpretation
 - glmnet: absolute regression coefficients
-- Random Forest: SHAP value analysis (non‑linear feature interactions)
+- Random Forest: SHAP value analysis
+- non‑linear feature interactions
+
+###Key Findings
+The most important diagnostic features (sorted by importance):
+  1. radius_worst          (maximum radius)
+  2. concave.points_worst  (maximum number of concave points)
+  3. texture_worst         (maximum texture)
+  4. radius_se             (radius standard error)
+  5. area_worst            (maximum area)
+
+→ All "_worst" features (maximum values) are the most critical for the diagnosis of malignant tumors
 
 ## Model Performance Plots
 
