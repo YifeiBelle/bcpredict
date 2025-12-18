@@ -9,29 +9,32 @@ This project uses the Wisconsin Breast Cancer dataset to compare three machine l
 
 The best model (glmnet) has been packaged into an R package `bcpredict` for easy deployment and prediction.
 
-## Updated Project Structure
+## Project Structure
 
 ```
 BreastCancer_Project/
 ├── bcpredict/                    # R package for breast cancer prediction
 │   ├── DESCRIPTION
 │   ├── NAMESPACE
-│   ├── R/                        # Source code (predict_diagnosis)
-│   ├── man/                      # Documentation
-│   ├── data/                     # Toy dataset (toy_data_features)
-│   ├── inst/
-│   ├── vignettes/
-│   ├── tests/
-│   └── figures/                  # Model performance plots
+│   ├── R/                        # Source code (predict_diagnosis, visualize_toy, sysdata)
+│   ├── man/                      # Documentation (predict_diagnosis.Rd)
+│   ├── data/                     # Toy dataset (toy_data_features.rda)
+│   ├── figures/                  # Model performance plots (included in package)
+│   ├── create_toy.R              # Script to create toy dataset
+│   ├── document.R                # Documentation helper
+│   ├── make_toy.R                # Another toy dataset script
 ├── data/
 │   └── data.csv                  # Original Wisconsin dataset (569 samples, 30 features)
 ├── models/
 │   └── best_model.rds            # Saved best model (glmnet)
 ├── scripts/
 │   └── main.R                    # Complete analysis script
-├── README.md                     # This file
+├── .gitignore
+├── BreastCancer_Project.Rproj    # RStudio project file
+├── INSTALL_INSTRUCTIONS.md       # Additional installation instructions
 ├── LICENSE                       # MIT License
-└── BreastCancer_Project.Rproj    # RStudio project file
+├── README.md                     # This file
+
 ```
 
 ## How to Run the Analysis
