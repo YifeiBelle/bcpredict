@@ -34,30 +34,40 @@ BreastCancer_Project/
 ├── INSTALL_INSTRUCTIONS.md       # Additional installation instructions
 ├── LICENSE                       # MIT License
 ├── README.md                     # This file
+├── validate_model.R              # Verifying the Model
 
 ```
 
-## How to Run the Analysis
+## Verifying the Model
 
-1. Ensure R and the required packages are installed:
-   - caret
-   - dplyr
-   - pROC
-   - fastshap (optional for SHAP analysis)
+If you wish to verify that the packaged model reproduces the reported performance, you can run a simple validation script included in the project.
 
-   If these packages are not installed, you can install them with:
+### Quick Validation
+
+1. Ensure you have installed the `bcpredict` package (see [Installation](#installation)).
+2. Download or clone the project repository.
+3. Run the validation script from the project root directory:
+
    ```r
-   install.packages(c("caret", "dplyr", "pROC", "fastshap"))
+   source("validate_model.R")
    ```
 
-2. Run the analysis script:
-   ```r
-   source("scripts/main.R")
+   Alternatively, run it directly with Rscript:
+
+   ```bash
+   Rscript validate_model.R
    ```
+### Expected Output
 
-3. Results will be saved in the `figures/` and `models/` directories (created automatically).
+The validation script prints a detailed confusion matrix and metrics. The expected values are:
 
-**Note:** The package `bcpredict` already includes the trained model and performance figures, so running the script is only necessary if you wish to reproduce the analysis or retrain with new data.
+- **Accuracy**: 0.9882
+- **Sensitivity**: 0.9841
+- **Specificity**: 0.9907
+- **F1‑score**: 0.9841
+- **AUC**: 0.9912
+
+If you obtain these numbers (within rounding error), the model is correctly reproducing the published results.
 
 ## Using the R Package `bcpredict`
 
@@ -69,11 +79,6 @@ Install the package directly from GitHub using the `subdir` argument (the packag
 # Install remotes if not already installed
 # install.packages("remotes")
 remotes::install_github("YifeiBelle/bcpredict", subdir = "bcpredict")
-```
-
-Alternatively, you can install the package from the local source:
-```r
-install.packages("bcpredict", repos = NULL, type = "source")
 ```
 
 ### Usage
