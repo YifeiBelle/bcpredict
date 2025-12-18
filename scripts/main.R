@@ -1,3 +1,36 @@
+# 设置工作目录为项目根目录（脚本所在目录的父目录）
+# 尝试获取当前脚本的路径
+script_path <- NULL
+tryCatch({
+  # 如果在RStudio中
+  if (requireNamespace("rstudioapi", quietly = TRUE)) {
+    script_path <- rstudioapi::getActiveDocumentContext()$path
+  }
+}, error = function(e) {
+  # 忽略错误，尝试其他方法
+})
+if (is.null(script_path) || !file.exists(script_path)) {
+  # 尝试通过sys.frame获取（当脚本被source时）
+  tryCatch({
+    script_path <- normalizePath(sys.frame(1)$ofile)
+  }, error = function(e) {
+    # 如果失败，尝试通过命令行参数获取
+    cmd_args <- commandArgs(trailingOnly = FALSE)
+    file_arg <- grep("^--file=", cmd_args, value = TRUE)
+    if (length(file_arg) > 0) {
+      script_path <- sub("^--file=", "", file_arg)
+      script_path <- normalizePath(script_path)
+    }
+  })
+}
+if (!is.null(script_path) && file.exists(script_path)) {
+  project_root <- dirname(dirname(script_path))  # 上两级目录：scripts -> 项目根目录
+  setwd(project_root)
+  cat("工作目录已设置为项目根目录:", getwd(), "\n")
+} else {
+  cat("无法确定脚本路径，使用当前工作目录:", getwd(), "\n")
+}
+
 # 加载必需的包
 library(caret)
 library(dplyr)
