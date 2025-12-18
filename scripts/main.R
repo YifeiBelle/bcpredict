@@ -1,46 +1,3 @@
-# 确定脚本路径，用于构建数据文件的绝对路径
-script_path <- NULL
-tryCatch({
-  # 如果在RStudio中
-  if (requireNamespace("rstudioapi", quietly = TRUE)) {
-    script_path <- rstudioapi::getActiveDocumentContext()$path
-  }
-}, error = function(e) {})
-if (is.null(script_path) || !file.exists(script_path)) {
-  # 尝试通过sys.frame获取（当脚本被source时）
-  tryCatch({
-    script_path <- normalizePath(sys.frame(1)$ofile)
-  }, error = function(e) {
-    # 如果失败，尝试通过命令行参数获取
-    cmd_args <- commandArgs(trailingOnly = FALSE)
-    file_arg <- grep("^--file=", cmd_args, value = TRUE)
-    if (length(file_arg) > 0) {
-      script_path <- sub("^--file=", "", file_arg)
-      script_path <- normalizePath(script_path)
-    }
-  })
-}
-if (!is.null(script_path) && file.exists(script_path)) {
-  # 计算项目根目录（脚本所在目录的父目录）
-  project_root <- dirname(dirname(script_path))
-  # 设置工作目录到项目根目录
-  setwd(project_root)
-  cat("工作目录已设置为项目根目录:", getwd(), "\n")
-} else {
-  cat("无法确定脚本路径，使用当前工作目录:", getwd(), "\n")
-}
-
-# 构建数据文件路径
-if (exists("project_root") && !is.null(project_root)) {
-  data_file <- file.path(project_root, "data", "data.csv")
-} else {
-  data_file <- "data/data.csv"
-}
-cat("数据文件路径:", data_file, "\n")
-if (!file.exists(data_file)) {
-  stop("数据文件不存在: ", data_file, "\n请检查路径。")
-}
-
 # 加载必需的包
 library(caret)
 library(dplyr)
@@ -99,7 +56,7 @@ calculate_metrics <- function(true_vals, predicted_vals) {
 }
 
 # 读取数据
-data <- read.csv(data_file, stringsAsFactors = FALSE)
+data <- read.csv("data/data.csv", stringsAsFactors = FALSE)
 
 # 数据预处理
 if ("X" %in% names(data)) data$X <- NULL  # 安全删除
@@ -145,14 +102,14 @@ for (method in model_methods) {
   }
   
   # 训练模型(重复交叉验证 + 超参数调优)
-  model <- train(diagnosis ~ .,
-                 data = train_data,
+  model <- train(diagnosis ~ ., 
+                 data = train_data, 
                  method = method,
                  preProcess = c("center", "scale"), # 关键修改：将预处理集成到模型中
                  tuneGrid = tune_grid,
                  trControl = trainControl(
-                   method = "repeatedcv",
-                   number = 10,
+                   method = "repeatedcv", 
+                   number = 10, 
                    repeats = 3,
                    classProbs = TRUE,
                    summaryFunction = twoClassSummary
@@ -169,6 +126,7 @@ for (method in model_methods) {
   predictions <- ifelse(pred_prob >= 0.4, "M", "B")
   predictions <- factor(predictions, levels = levels(test_data$diagnosis))
   
+  # 关键修改：指定 positive = "M" 以正确计算敏感度等指标
   cm <- confusionMatrix(predictions, test_data$diagnosis, positive = "M")
   
   # 计算ROC曲线的AUC值
@@ -195,7 +153,6 @@ for (method in model_methods) {
 rownames(results) <- NULL
 
 # 显示对比结果
-cat("\n========== 三个模型性能对比 ==========\n")
 print(results[order(results$Accuracy, decreasing = TRUE), ])
 
 # 选择最佳模型
@@ -205,6 +162,7 @@ best_model_name <- results$Model[best_idx]
 cat("\n最佳模型:", best_model_name, "\n")
 cat("准确率(Accuracy):", results$Accuracy[best_idx], "\n")
 cat("精准率(Precision):", results$Precision[best_idx], "\n")
+
 cat("灵敏度(Sensitivity):", results$Sensitivity[best_idx], "\n")
 cat("特异性(Specificity):", results$Specificity[best_idx], "\n")
 cat("F1分数:", results$F1[best_idx], "\n")
