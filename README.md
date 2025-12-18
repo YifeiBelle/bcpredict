@@ -38,6 +38,24 @@ BreastCancer_Project/
 
 ```
 
+## Dependencies
+
+To use the `bcpredict` package or run the validation/analysis scripts, you need the following R packages:
+
+- **caret** – for model training and evaluation
+- **dplyr** – for data manipulation
+- **pROC** – for ROC curve and AUC calculation
+- **fastshap** – optional, for SHAP value analysis (only needed if you want to reproduce the SHAP plots)
+
+You can install them with a single command:
+
+```r
+install.packages(c("caret", "dplyr", "pROC", "fastshap"))
+```
+
+The `bcpredict` package itself depends on these packages; they will be automatically installed when you install `bcpredict` from GitHub. However, if you are running the validation script directly, ensure they are installed beforehand.
+
+
 ## Verifying the Model
 
 If you wish to verify that the packaged model reproduces the reported performance, you can run a simple validation script included in the project.
