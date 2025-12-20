@@ -2,21 +2,32 @@ Package: bcpredict
 Title: Breast Cancer Diagnosis Predictor
 Version: 0.1.0
 Authors@R: 
-    person("Yifei", "Song", email = "Yifei.Song23@student.xjtlu.edu.cn", role = c("aut", "cre"))
-Description: Predicts breast cancer diagnosis (benign vs malignant) based on 30 numeric features using a trained glmnet model.
+    person("Yifei", "Song", 
+           email = "Yifei.Song23@student.xjtlu.edu.cn", 
+           role = c("aut", "cre"))
+Description: Predicts breast cancer diagnosis (benign vs malignant) based on 
+    30 numeric features from the Wisconsin Breast Cancer Diagnostic dataset.
+    Uses a trained glmnet (elastic net) model with optimized threshold for 
+    classification. The package includes visualization tools for exploratory
+    data analysis and model interpretation. Designed for both clinical
+    researchers and machine learning practitioners.
 License: MIT + file LICENSE
+URL: https://github.com/YifeiBelle/bcpredict
+BugReports: https://github.com/YifeiBelle/bcpredict/issues
 Encoding: UTF-8
 LazyData: true
 Imports:
-    caret,
-    glmnet,
-    Matrix,
+    caret (>= 6.0.94),
+    glmnet (>= 4.1),
     stats,
     utils
 Suggests:
-    testthat,
+    testthat (>= 3.0.0),
     knitr,
     rmarkdown,
     pROC,
-    dplyr
+    dplyr,
+    fastshap
+VignetteBuilder: knitr
 RoxygenNote: 7.3.3
+Roxygen: list(markdown = TRUE)
