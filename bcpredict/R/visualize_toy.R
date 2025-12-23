@@ -1,60 +1,3 @@
-#' Visualize Toy Data Features
-#'
-#' @description
-#' Generates exploratory plots for the toy dataset (or any data frame with the same 30 features).
-#' Four plot types are supported: histogram (distribution of each feature),
-#' correlation heatmap, PCA scatter plot, and feature importance (coefficients of the trained glmnet model).
-#'
-#' @param data A data.frame containing the 30 feature columns. If NULL (default),
-#'   the built-in \code{toy_data_features} dataset is used.
-#' @param type Character string specifying the type of plot:
-#'   \itemize{
-#'     \item "histogram": Histograms of each feature (30 subplots).
-#'     \item "correlation": Heatmap of pairwise Pearson correlations.
-#'     \item "pca": Scatter plot of the first two principal components.
-#'     \item "importance": Bar plot of the absolute coefficients of the trained glmnet model (the best model from the original analysis).
-#'   }
-#' @param ... Additional graphical parameters passed to the underlying plot functions.
-#'
-#' @return Invisibly returns the plotted object (a list for PCA, a matrix for correlation,
-#'   a numeric vector for importance, or NULL for histogram). The primary purpose is side‑effect plotting.
-#'
-#' @details
-#' For "histogram", the function sets up a 6×5 layout and draws a histogram for each
-#' of the 30 features. The x‑axis is labeled with the feature name.
-#'
-#' For "correlation", the correlation matrix is computed with \code{cor()} and plotted
-#' using \code{image()} with a color gradient from blue (‑1) to red (+1). The diagonal
-#' is omitted (set to NA) to improve readability.
-#'
-#' For "pca", principal component analysis is performed via \code{prcomp()} (centered
-#' but not scaled, because the features are already on similar scales). The first two
-#' PCs are plotted as a scatter plot. Points are colored by their row index.
-#'
-#' For "importance", the function extracts the coefficients of the trained glmnet model
-#' (stored internally in the package) and plots their absolute values as a horizontal bar plot.
-#' This visualization matches the feature importance plot shown in the original analysis.
-#'
-#' @note
-#' The function is intended for quick exploratory visualization of the toy dataset.
-#' For publication‑quality graphics, consider using dedicated plotting packages
-#' (e.g., \code{ggplot2}).
-#'
-#' @examples
-#' # Load the toy dataset
-#' data(toy_data_features)
-#' # Histogram of all features (may be slow due to many subplots)
-#' \dontrun{
-#' visualize_toy_data(type = "histogram")
-#' }
-#' # Correlation heatmap
-#' visualize_toy_data(type = "correlation")
-#' # PCA scatter plot
-#' visualize_toy_data(type = "pca")
-#' # Feature importance (coefficients of the trained glmnet model)
-#' visualize_toy_data(type = "importance")
-#'
-#' @export
 visualize_toy_data <- function(data = NULL, type = c("histogram", "correlation", "pca", "importance"), ...) {
   type <- match.arg(type)
 
@@ -136,21 +79,32 @@ visualize_toy_data <- function(data = NULL, type = c("histogram", "correlation",
   # Color palette from blue (negative) to white (zero) to red (positive)
   col_pal <- colorRampPalette(c("blue", "white", "red"))(100)
 
+  # Increase margins to accommodate labels and legend
+  oldpar <- par(mar = c(8, 8, 4, 4) + 0.1)
+  on.exit(par(oldpar))
+
   # Plot
   image(seq_len(ncol(cor_mat)), seq_len(nrow(cor_mat)), cor_mat,
         col = col_pal,
-        xlab = "Feature index", ylab = "Feature index",
+        xlab = "", ylab = "",
         main = "Pairwise Pearson correlation",
         axes = FALSE, ...)
-  axis(1, at = seq_len(ncol(cor_mat)), labels = colnames(data), las = 2, cex.axis = 0.7)
-  axis(2, at = seq_len(nrow(cor_mat)), labels = colnames(data), las = 1, cex.axis = 0.7)
+  # X-axis labels (feature names) rotated 45 degrees
+  axis(1, at = seq_len(ncol(cor_mat)), labels = colnames(data), las = 2, cex.axis = 0.6)
+  # Y-axis labels
+  axis(2, at = seq_len(nrow(cor_mat)), labels = colnames(data), las = 1, cex.axis = 0.6)
+  # Add axis titles
+  mtext("Feature index", side = 1, line = 6, cex = 0.8)
+  mtext("Feature index", side = 2, line = 6, cex = 0.8)
   box()
 
-  # Add a color legend
+  # Add a color legend outside the plot area
   legend("topright",
          legend = c("-1", "0", "+1"),
          fill = c("blue", "white", "red"),
-         bty = "n")
+         bty = "n",
+         inset = c(0, -0.15),
+         xpd = TRUE)
 
   invisible(cor_mat)
 }
