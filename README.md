@@ -99,7 +99,10 @@ data(toy_data_features)
 
 # Predict diagnosis
 predictions <- predict_diagnosis(toy_data_features)
-print(predictions)
+# View first few predictions
+head(predictions)
+# Count of benign vs malignant
+table(predictions)
 
 # Visualize the toy data (correlation heatmap)
 visualize_toy_data(type = "correlation")
